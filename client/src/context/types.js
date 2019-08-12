@@ -1,0 +1,9 @@
+export const ADD_ENTRY = 'ADD_ENTRY';
+export const DELETE_ENTRY = 'DELETE_ENTRY';
+export const SET_CURRENT = 'SET_CURRENT';
+export const CLEAR_CURRENT = 'CLEAR_CURRENT';
+export const UPDATE_ENTRY = 'UPDATE_ENTRY';
+export const FILTER_ENTRIES = 'FILTER_ENTRIES';
+export const CLEAR_FILTER = 'CLEAR_FILTER';
+export const SET_ALERT = 'SET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
