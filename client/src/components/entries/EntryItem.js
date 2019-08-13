@@ -4,12 +4,13 @@ import EntryContext from '../../context/entry/entryContext';
 
 const EntryItem = ({ entry }) => {
   const entryContext = useContext(EntryContext);
-  const { deleteEntry } = entryContext;
+  const { deleteEntry, setCurrent, clearCurrent } = entryContext;
 
   const { id, name, category, type, amount } = entry;
 
   const onDelete = () => {
     deleteEntry(id);
+    clearCurrent();
   };
 
   return (
@@ -34,7 +35,12 @@ const EntryItem = ({ entry }) => {
         </li>
       </ul>
       <p>
-        <button className='btn btn-dark btn-small'>Edit</button>
+        <button
+          className='btn btn-dark btn-small'
+          onClick={() => setCurrent(entry)}
+        >
+          Edit
+        </button>
         <button className='btn btn-danger btn-small' onClick={onDelete}>
           Delete
         </button>

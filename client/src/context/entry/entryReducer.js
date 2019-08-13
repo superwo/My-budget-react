@@ -15,10 +15,27 @@ export default (state, action) => {
         ...state,
         entries: [...state.entries, action.payload]
       };
+    case UPDATE_ENTRY:
+      return {
+        ...state,
+        entries: state.entries.map(entry =>
+          entry.id === action.payload.id ? action.payload : entry
+        )
+      };
     case DELETE_ENTRY:
       return {
         ...state,
         entries: state.entries.filter(entry => entry.id !== action.payload)
+      };
+    case SET_CURRENT:
+      return {
+        ...state,
+        current: action.payload
+      };
+    case CLEAR_CURRENT:
+      return {
+        ...state,
+        current: null
       };
     default:
       return state;
