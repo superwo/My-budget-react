@@ -37,7 +37,8 @@ const EntryState = props => {
         amount: 1500
       }
     ],
-    current: null
+    current: null,
+    filtered: null
   };
 
   const [state, dispatch] = useReducer(entryReducer, initialState);
@@ -69,19 +70,28 @@ const EntryState = props => {
   };
 
   // Filter Entries
+  const filterEntries = text => {
+    dispatch({ type: FILTER_ENTRIES, payload: text });
+  };
 
   // Clear Filter
+  const clearFilter = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
 
   return (
     <EntryContext.Provider
       value={{
         entries: state.entries,
         current: state.current,
+        filtered: state.filtered,
         addEntry,
         deleteEntry,
         setCurrent,
         clearCurrent,
-        updateEntry
+        updateEntry,
+        filterEntries,
+        clearFilter
       }}
     >
       {props.children}
