@@ -1,12 +1,15 @@
 import React, { useReducer } from 'react';
-import uuid from 'uuid';
+import axios from 'axios';
 import EntryContext from './entryContext';
 import entryReducer from './entryReducer';
 import {
+  GET_ENTRIES,
   ADD_ENTRY,
+  ENTRY_ERROR,
   DELETE_ENTRY,
   SET_CURRENT,
   CLEAR_CURRENT,
+  CLEAR_ENTRIES,
   UPDATE_ENTRY,
   FILTER_ENTRIES,
   CLEAR_FILTER
@@ -14,44 +17,81 @@ import {
 
 const EntryState = props => {
   const initialState = {
-    entries: [
-      {
-        id: 1,
-        name: 'Buy a car',
-        category: 'Vehicle',
-        type: 'expense',
-        amount: 7850
-      },
-      {
-        id: 2,
-        name: 'Go to Italy',
-        category: 'Holliday',
-        type: 'expense',
-        amount: 2000
-      },
-      {
-        id: 3,
-        name: 'Money for my job',
-        category: 'Work',
-        type: 'income',
-        amount: 1500
-      }
-    ],
+    entries: null,
     current: null,
-    filtered: null
+    filtered: null,
+    error: null
   };
 
   const [state, dispatch] = useReducer(entryReducer, initialState);
 
+  // Get Entries
+  const getEntries = async () => {
+    try {
+      const res = await axios.get('/api/entries');
+
+      dispatch({
+        type: GET_ENTRIES,
+        payload: res.data
+      });
+    } catch (err) {
+      dispatch({
+        type: ENTRY_ERROR,
+        payload: err.response.msg
+      });
+    }
+  };
+
   // Add Entry
-  const addEntry = entry => {
-    entry.id = uuid.v4();
-    dispatch({ type: ADD_ENTRY, payload: entry });
+  const addEntry = async entry => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.post('/api/entries', entry, config);
+
+      dispatch({ type: ADD_ENTRY, payload: res.data });
+    } catch (err) {
+      dispatch({ type: ENTRY_ERROR, payload: err.response.msg });
+    }
   };
 
   // Delete Entry
-  const deleteEntry = id => {
-    dispatch({ type: DELETE_ENTRY, payload: id });
+  const deleteEntry = async id => {
+    try {
+      await axios.delete(`/api/entries/${id}`);
+      dispatch({ type: DELETE_ENTRY, payload: id });
+    } catch (err) {
+      dispatch({
+        type: ENTRY_ERROR,
+        payload: err.response.msg
+      });
+    }
+  };
+
+  // Update Entry
+  const updateEntry = async entry => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.put(`/api/entries/${entry._id}`, entry, config);
+
+      dispatch({ type: UPDATE_ENTRY, payload: res.data });
+    } catch (err) {
+      dispatch({ type: ENTRY_ERROR, payload: err.response.msg });
+    }
+  };
+
+  // Clear Entries
+  const clearEntries = () => {
+    dispatch({ type: CLEAR_ENTRIES });
   };
 
   // Set Current Entry
@@ -62,11 +102,6 @@ const EntryState = props => {
   // Clear Current Entry
   const clearCurrent = () => {
     dispatch({ type: CLEAR_CURRENT });
-  };
-
-  // Update Entry
-  const updateEntry = entry => {
-    dispatch({ type: UPDATE_ENTRY, payload: entry });
   };
 
   // Filter Entries
@@ -85,13 +120,16 @@ const EntryState = props => {
         entries: state.entries,
         current: state.current,
         filtered: state.filtered,
+        error: state.error,
+        getEntries,
         addEntry,
         deleteEntry,
         setCurrent,
         clearCurrent,
         updateEntry,
         filterEntries,
-        clearFilter
+        clearFilter,
+        clearEntries
       }}
     >
       {props.children}

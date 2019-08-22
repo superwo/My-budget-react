@@ -6,10 +6,10 @@ const EntryItem = ({ entry }) => {
   const entryContext = useContext(EntryContext);
   const { deleteEntry, setCurrent, clearCurrent } = entryContext;
 
-  const { id, name, category, type, amount } = entry;
+  const { _id, name, category, type, amount } = entry;
 
   const onDelete = () => {
-    deleteEntry(id);
+    deleteEntry(_id);
     clearCurrent();
   };
 

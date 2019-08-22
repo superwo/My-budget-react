@@ -11,7 +11,9 @@ const Entry = require('../models/Entry');
 // @access Private
 router.get('/', auth, async (req, res) => {
   try {
-    const entries = await Entry.find({ user: req.user.id }).sort({ date: -1 });
+    const entries = await Entry.find({ user: req.user.id }).sort({
+      createdAt: -1
+    });
     res.json(entries);
   } catch (err) {
     console.error(err.message);
