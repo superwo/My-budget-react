@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import EntryContext from '../../context/entry/entryContext';
+import moment from 'moment';
 
 const EntryItem = ({ entry }) => {
   const entryContext = useContext(EntryContext);
   const { deleteEntry, setCurrent, clearCurrent } = entryContext;
 
-  const { _id, name, category, type, amount } = entry;
+  const { _id, name, category, type, amount, createdAt } = entry;
 
   const onDelete = () => {
     deleteEntry(_id);
@@ -26,6 +27,9 @@ const EntryItem = ({ entry }) => {
           {type.charAt(0).toUpperCase() + type.slice(1)}
         </span>
       </h3>
+      <div style={{ fontSize: '12px', color: '#555', fontStyle: 'italic' }}>
+        {moment(createdAt).format('ll')}
+      </div>
       <ul className='list'>
         <li>
           <i className='fas fa-dollar-sign' /> {amount}
@@ -34,7 +38,7 @@ const EntryItem = ({ entry }) => {
           <i className='fas fa-archive' /> {category}
         </li>
       </ul>
-      <p>
+      <p style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <button
           className='btn btn-dark btn-small'
           onClick={() => setCurrent(entry)}

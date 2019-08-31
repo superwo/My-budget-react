@@ -71,6 +71,7 @@ export default (state, action) => {
         filtered: null
       };
     case ENTRY_ERROR:
+      console.log(action.payload);
       return {
         ...state,
         error: action.payload

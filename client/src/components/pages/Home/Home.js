@@ -1,10 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import Entries from '../../entries/Entries';
+import AuthContext from '../../../context/auth/authContext';
 import EntryForm from '../../entries/EntryForm';
 import EntryFilter from '../../entries/EntryFilter';
-import AuthContext from '../../../context/auth/authContext';
+import Calendar from 'react-calendar';
 
 const Home = () => {
+  const [date, setDate] = useState(new Date());
+
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
@@ -13,16 +16,19 @@ const Home = () => {
     // eslint-disable-next-line
   }, []);
 
+  const onChange = date => setDate(date);
+
   return (
-    <div className='grid-2'>
-      <div>
-        <EntryForm />
-      </div>
-      <div>
-        <EntryFilter />
+    <Fragment>
+      <EntryFilter />
+      <div className='grid-3-2'>
+        <div>
+          <Calendar value={date} onChange={onChange} />
+          <EntryForm />
+        </div>
         <Entries />
       </div>
-    </div>
+    </Fragment>
   );
 };
 

@@ -55,6 +55,7 @@ const EntryState = props => {
 
       dispatch({ type: ADD_ENTRY, payload: res.data });
     } catch (err) {
+      // console.log(err.response.data);
       dispatch({ type: ENTRY_ERROR, payload: err.response.msg });
     }
   };

@@ -51,7 +51,8 @@ const EntryForm = () => {
       <h2 className='text-primary'>{current ? 'Edit Entry' : 'Add Entry'}</h2>
       <input
         type='text'
-        placeholder='Name'
+        placeholder='Description'
+        required
         name='name'
         value={name}
         onChange={onChange}
@@ -59,13 +60,16 @@ const EntryForm = () => {
       <input
         type='text'
         placeholder='Category'
+        required
         name='category'
         value={category}
         onChange={onChange}
       />
       <input
         type='text'
-        placeholder='Amount'
+        required
+        pattern='^\$?(?!0.00)(([0-9]{1,5},([0-9]{3},)*)[0-9]{3}|[0-9]{1,5})(\.[0-9]{2})?$'
+        placeholder='$100.00'
         name='amount'
         value={amount}
         onChange={onChange}

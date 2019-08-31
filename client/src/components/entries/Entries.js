@@ -18,17 +18,41 @@ const Entries = () => {
     return <h4>No entries</h4>;
 
   const entriesList = filtered || entries;
+  const entriesLeft = [
+    <CSSTransition timeout={500} classNames='item' key='incomes'>
+      <h3>Incomes</h3>
+    </CSSTransition>
+  ];
+  const entriesRight = [
+    <CSSTransition timeout={500} classNames='item' key='expenses'>
+      <h3>Expenses</h3>
+    </CSSTransition>
+  ];
+  if (entries !== null) {
+    entriesList.forEach(entry => {
+      if (entry.type === 'income') {
+        entriesLeft.push(
+          <CSSTransition timeout={500} classNames='item' key={entry._id}>
+            <EntryItem entry={entry} />
+          </CSSTransition>
+        );
+      } else {
+        entriesRight.push(
+          <CSSTransition timeout={500} classNames='item' key={entry._id}>
+            <EntryItem entry={entry} />
+          </CSSTransition>
+        );
+      }
+    });
+  }
 
   return (
     <Fragment>
       {entries !== null && !loading ? (
-        <TransitionGroup>
-          {entriesList.map(entry => (
-            <CSSTransition key={entry._id} timeout={500} classNames='item'>
-              <EntryItem entry={entry} />
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
+        <Fragment>
+          <TransitionGroup>{entriesLeft}</TransitionGroup>
+          <TransitionGroup>{entriesRight}</TransitionGroup>
+        </Fragment>
       ) : (
         <Spinner />
       )}
