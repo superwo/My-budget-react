@@ -34,7 +34,8 @@ const App = () => {
                   <Route exact path='/about' component={About} />
                   <Route exact path='/register' component={Register} />
                   <Route exact path='/login' component={Login} />
-                  <PrivateRoute exact path='/:month' component={Home} />
+                  <PrivateRoute exact path='/:year/:month' component={Home} />
+                  <h2>404</h2>
                 </Switch>
               </div>
             </Fragment>

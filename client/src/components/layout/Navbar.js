@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 import EntryContext from '../../context/entry/entryContext';
+import moment from 'moment';
 
 const Navbar = props => {
   const { title, icon, location } = props;
@@ -10,7 +11,7 @@ const Navbar = props => {
   const entryContext = useContext(EntryContext);
 
   const { isAuthenticated, logout, user } = authContext;
-  const { clearEntries } = entryContext;
+  const { clearEntries, sumEntries, loading } = entryContext;
 
   const onLogout = () => {
     logout();
@@ -39,29 +40,21 @@ const Navbar = props => {
     </Fragment>
   );
 
+  const budget = () => {
+    if (loading || (!sumEntries[0] && !sumEntries[1])) {
+      return '';
+    } else {
+      return sumEntries[0] - sumEntries[1];
+    }
+  };
+
   const monthAndYear = () => {
     const date = new Date();
-    let month = location.pathname.replace('/', '');
-    const months = [
-      'january',
-      'february',
-      'march',
-      'april',
-      'may',
-      'june',
-      'july',
-      'august',
-      'september',
-      'october',
-      'november',
-      'december'
-    ];
-    month = month ? month : months[date.getMonth()];
-    return (
-      <span>
-        {month[0].toUpperCase() + month.substr(1)} {date.getFullYear()}
-      </span>
-    );
+    let month = location.pathname.replace(/\//g, ' ');
+    month = month.trim()
+      ? moment(month).format('MMMM YYYY')
+      : moment(date).format('MMMM YYYY');
+    return <span className='lead'>{month}</span>;
   };
 
   return (
@@ -69,7 +62,9 @@ const Navbar = props => {
       <h1>
         <i className={icon} /> {title}
       </h1>
-      <div>{monthAndYear()}</div>
+      <div>
+        {monthAndYear()} {budget()}
+      </div>
       <ul>
         <li>
           <Link to='/about'>About</Link>

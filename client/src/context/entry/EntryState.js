@@ -12,7 +12,9 @@ import {
   CLEAR_ENTRIES,
   UPDATE_ENTRY,
   FILTER_ENTRIES,
-  CLEAR_FILTER
+  CLEAR_FILTER,
+  CHANGE_SELECTED_DATE,
+  GET_SUM_ENTRIES
 } from '../types';
 
 const EntryState = props => {
@@ -20,16 +22,22 @@ const EntryState = props => {
     entries: null,
     current: null,
     filtered: null,
-    error: null
+    error: null,
+    sumEntries: [],
+    selectedDate: new Date()
   };
 
   const [state, dispatch] = useReducer(entryReducer, initialState);
 
   // Get Entries
-  const getEntries = async month => {
+  const getEntries = async (year, month) => {
+    dispatch({ type: CLEAR_ENTRIES });
     try {
-      const res = await axios.get(`/api/entries/${month ? month : ''}`);
-      console.log(month);
+      let params = '';
+      if (year && month) {
+        params = `${year}/${month}`;
+      }
+      const res = await axios.get(`/api/entries/${params}`);
       dispatch({
         type: GET_ENTRIES,
         payload: res.data
@@ -115,6 +123,16 @@ const EntryState = props => {
     dispatch({ type: CLEAR_FILTER });
   };
 
+  // Get the sum of entries
+  const getSumEntries = () => {
+    dispatch({ type: GET_SUM_ENTRIES });
+  };
+
+  // Change Date
+  const changeSelectedDate = newDate => {
+    dispatch({ type: CHANGE_SELECTED_DATE, payload: newDate });
+  };
+
   return (
     <EntryContext.Provider
       value={{
@@ -122,6 +140,9 @@ const EntryState = props => {
         current: state.current,
         filtered: state.filtered,
         error: state.error,
+        sumEntries: state.sumEntries,
+        selectedDate: state.selectedDate,
+        changeSelectedDate,
         getEntries,
         addEntry,
         deleteEntry,
@@ -130,7 +151,8 @@ const EntryState = props => {
         updateEntry,
         filterEntries,
         clearFilter,
-        clearEntries
+        clearEntries,
+        getSumEntries
       }}
     >
       {props.children}

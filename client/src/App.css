@@ -77,6 +77,12 @@ img {
 .text-dark {
   color: var(--dark-color);
 }
+.text-success {
+  color: var(--success-color);
+}
+.text-danger {
+  color: var(--danger-color);
+}
 
 .text-center {
   text-align: center;

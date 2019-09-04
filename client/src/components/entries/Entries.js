@@ -7,17 +7,28 @@ import Spinner from '../layout/Spinner';
 
 const Entries = ({
   match: {
-    params: { month }
+    params: { year, month }
   }
 }) => {
   const entryContext = useContext(EntryContext);
 
-  const { entries, filtered, getEntries, loading } = entryContext;
+  const {
+    entries,
+    filtered,
+    getEntries,
+    loading,
+    selectedDate,
+    getSumEntries,
+    sumEntries
+  } = entryContext;
 
   useEffect(() => {
-    getEntries(month);
+    getSumEntries();
+  }, [entries]);
+  useEffect(() => {
+    getEntries(year, month);
     // eslint-disable-next-line
-  }, []);
+  }, [selectedDate]);
 
   if (entries !== null && entries.length === 0 && !loading)
     return <h4>No entries</h4>;
@@ -25,12 +36,12 @@ const Entries = ({
   const entriesList = filtered || entries;
   const entriesLeft = [
     <CSSTransition timeout={500} classNames='item' key='incomes'>
-      <h3>Incomes</h3>
+      <h3 className='text-success'>Incomes: ${sumEntries[0]}</h3>
     </CSSTransition>
   ];
   const entriesRight = [
     <CSSTransition timeout={500} classNames='item' key='expenses'>
-      <h3>Expenses</h3>
+      <h3 className='text-danger'>Expenses: ${sumEntries[1]}</h3>
     </CSSTransition>
   ];
   if (entries !== null) {

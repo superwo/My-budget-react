@@ -32,7 +32,7 @@ router.get('/', auth, async (req, res) => {
 // @route GET api/entries/month
 // @desc Get all users entries in certain month
 // @access Private
-router.get('/:month', auth, async (req, res) => {
+router.get('/:year/:month', auth, async (req, res) => {
   const months = [
     'january',
     'february',
@@ -48,19 +48,19 @@ router.get('/:month', auth, async (req, res) => {
     'december'
   ];
   let month = req.params.month.toLowerCase();
+  let year = req.params.year;
   let monthIndex = null;
   if (months.indexOf(month) > -1) {
     monthIndex = months.indexOf(month);
-    console.log(monthIndex);
   }
   const date = new Date();
   const firstDayofMonth = new Date(
-    date.getFullYear(),
+    year,
     monthIndex ? monthIndex : date.getMonth(),
     1
   );
   const lastDayofMonth = new Date(
-    date.getFullYear(),
+    year,
     monthIndex ? monthIndex + 1 : date.getMonth() + 1,
     1
   );

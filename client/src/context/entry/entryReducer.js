@@ -8,7 +8,9 @@ import {
   UPDATE_ENTRY,
   FILTER_ENTRIES,
   CLEAR_FILTER,
-  CLEAR_ENTRIES
+  CLEAR_ENTRIES,
+  CHANGE_SELECTED_DATE,
+  GET_SUM_ENTRIES
 } from '../types';
 
 export default (state, action) => {
@@ -45,6 +47,7 @@ export default (state, action) => {
         entries: null,
         filtered: null,
         error: null,
+        sumEntries: [],
         current: null
       };
     case SET_CURRENT:
@@ -75,6 +78,30 @@ export default (state, action) => {
       return {
         ...state,
         error: action.payload
+      };
+    case CHANGE_SELECTED_DATE:
+      return {
+        ...state,
+        selectedDate: action.payload
+      };
+    case GET_SUM_ENTRIES:
+      let sum = [];
+      if (state.entries) {
+        sum = state.entries.reduce(
+          (acc, curr) => {
+            if (curr.type === 'income') {
+              acc[0] = acc[0] + curr.amount;
+            } else {
+              acc[1] = acc[1] + curr.amount;
+            }
+            return acc;
+          },
+          [0, 0]
+        );
+      }
+      return {
+        ...state,
+        sumEntries: sum
       };
     default:
       return state;
