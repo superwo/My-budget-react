@@ -1,10 +1,11 @@
 import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 import EntryContext from '../../context/entry/entryContext';
 
-const Navbar = ({ title, icon }) => {
+const Navbar = props => {
+  const { title, icon, location } = props;
   const authContext = useContext(AuthContext);
   const entryContext = useContext(EntryContext);
 
@@ -38,11 +39,37 @@ const Navbar = ({ title, icon }) => {
     </Fragment>
   );
 
+  const monthAndYear = () => {
+    const date = new Date();
+    let month = location.pathname.replace('/', '');
+    const months = [
+      'january',
+      'february',
+      'march',
+      'april',
+      'may',
+      'june',
+      'july',
+      'august',
+      'september',
+      'october',
+      'november',
+      'december'
+    ];
+    month = month ? month : months[date.getMonth()];
+    return (
+      <span>
+        {month[0].toUpperCase() + month.substr(1)} {date.getFullYear()}
+      </span>
+    );
+  };
+
   return (
     <div className='navbar bg-primary'>
       <h1>
         <i className={icon} /> {title}
       </h1>
+      <div>{monthAndYear()}</div>
       <ul>
         <li>
           <Link to='/about'>About</Link>
@@ -63,4 +90,4 @@ Navbar.defaultProps = {
   icon: 'fas fa-wallet'
 };
 
-export default Navbar;
+export default withRouter(Navbar);

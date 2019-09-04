@@ -3,15 +3,72 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 
-const User = require('../models/User');
 const Entry = require('../models/Entry');
 
 // @route GET api/entries
 // @desc Get all users entries
 // @access Private
 router.get('/', auth, async (req, res) => {
+  const date = new Date();
+  const firstDayofCurrentMonth = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  );
+  console.log(firstDayofCurrentMonth);
   try {
-    const entries = await Entry.find({ user: req.user.id }).sort({
+    const entries = await Entry.find({
+      user: req.user.id,
+      createdAt: { $gte: firstDayofCurrentMonth }
+    }).sort({
+      createdAt: -1
+    });
+    res.json(entries);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+// @route GET api/entries/month
+// @desc Get all users entries in certain month
+// @access Private
+router.get('/:month', auth, async (req, res) => {
+  const months = [
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'september',
+    'october',
+    'november',
+    'december'
+  ];
+  let month = req.params.month.toLowerCase();
+  let monthIndex = null;
+  if (months.indexOf(month) > -1) {
+    monthIndex = months.indexOf(month);
+    console.log(monthIndex);
+  }
+  const date = new Date();
+  const firstDayofMonth = new Date(
+    date.getFullYear(),
+    monthIndex ? monthIndex : date.getMonth(),
+    1
+  );
+  const lastDayofMonth = new Date(
+    date.getFullYear(),
+    monthIndex ? monthIndex + 1 : date.getMonth() + 1,
+    1
+  );
+  try {
+    const entries = await Entry.find({
+      user: req.user.id,
+      createdAt: { $gte: firstDayofMonth, $lt: lastDayofMonth }
+    }).sort({
       createdAt: -1
     });
     res.json(entries);

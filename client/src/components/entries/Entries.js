@@ -1,16 +1,21 @@
 import React, { Fragment, useContext, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EntryContext from '../../context/entry/entryContext';
 import EntryItem from './EntryItem';
 import Spinner from '../layout/Spinner';
 
-const Entries = () => {
+const Entries = ({
+  match: {
+    params: { month }
+  }
+}) => {
   const entryContext = useContext(EntryContext);
 
   const { entries, filtered, getEntries, loading } = entryContext;
 
   useEffect(() => {
-    getEntries();
+    getEntries(month);
     // eslint-disable-next-line
   }, []);
 
@@ -60,4 +65,4 @@ const Entries = () => {
   );
 };
 
-export default Entries;
+export default withRouter(Entries);

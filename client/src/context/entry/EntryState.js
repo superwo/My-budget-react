@@ -26,10 +26,10 @@ const EntryState = props => {
   const [state, dispatch] = useReducer(entryReducer, initialState);
 
   // Get Entries
-  const getEntries = async () => {
+  const getEntries = async month => {
     try {
-      const res = await axios.get('/api/entries');
-
+      const res = await axios.get(`/api/entries/${month ? month : ''}`);
+      console.log(month);
       dispatch({
         type: GET_ENTRIES,
         payload: res.data
