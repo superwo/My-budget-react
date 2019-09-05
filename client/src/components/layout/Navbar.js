@@ -44,17 +44,27 @@ const Navbar = props => {
     if (loading || (!sumEntries[0] && !sumEntries[1])) {
       return '';
     } else {
-      return sumEntries[0] - sumEntries[1];
+      const res = sumEntries[0] - sumEntries[1];
+      if (res > 0) {
+        return <span className='text-success'>$+{res}</span>;
+      } else {
+        return <span className='text-danger'>${res}</span>;
+      }
     }
   };
 
   const monthAndYear = () => {
     const date = new Date();
-    let month = location.pathname.replace(/\//g, ' ');
-    month = month.trim()
-      ? moment(month).format('MMMM YYYY')
-      : moment(date).format('MMMM YYYY');
-    return <span className='lead'>{month}</span>;
+    let month = location.pathname.replace(/\//g, ' ').trim();
+    month =
+      month && moment(month).isValid()
+        ? moment(month).format('MMMM YYYY')
+        : moment(date).format('MMMM YYYY');
+    return (
+      <span className='lead' style={{ marginRight: '20px' }}>
+        {month}
+      </span>
+    );
   };
 
   return (
@@ -65,12 +75,7 @@ const Navbar = props => {
       <div>
         {monthAndYear()} {budget()}
       </div>
-      <ul>
-        <li>
-          <Link to='/about'>About</Link>
-        </li>
-        {isAuthenticated ? authLinks : guestLinks}
-      </ul>
+      <ul>{isAuthenticated ? authLinks : guestLinks}</ul>
     </div>
   );
 };

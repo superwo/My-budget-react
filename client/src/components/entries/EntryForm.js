@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import EntryContext from '../../context/entry/entryContext';
 
-const EntryForm = () => {
+const EntryForm = ({ history }) => {
   const entryContext = useContext(EntryContext);
-
   const { addEntry, updateEntry, current, clearCurrent } = entryContext;
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const EntryForm = () => {
 
     if (current === null) {
       addEntry(entry);
+      history.push('/');
     } else {
       updateEntry(entry);
     }
@@ -109,4 +110,4 @@ const EntryForm = () => {
   );
 };
 
-export default EntryForm;
+export default withRouter(EntryForm);

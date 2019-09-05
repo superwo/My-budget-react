@@ -24,6 +24,7 @@ const Entries = ({
 
   useEffect(() => {
     getSumEntries();
+    // eslint-disable-next-line
   }, [entries]);
   useEffect(() => {
     getEntries(year, month);
@@ -31,7 +32,7 @@ const Entries = ({
   }, [selectedDate]);
 
   if (entries !== null && entries.length === 0 && !loading)
-    return <h4>No entries</h4>;
+    return <h4 className='text-center'>No entries</h4>;
 
   const entriesList = filtered || entries;
   const entriesLeft = [

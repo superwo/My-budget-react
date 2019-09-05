@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import moment from 'moment';
 import axios from 'axios';
 import EntryContext from './entryContext';
 import entryReducer from './entryReducer';
@@ -60,8 +61,8 @@ const EntryState = props => {
 
     try {
       const res = await axios.post('/api/entries', entry, config);
-
       dispatch({ type: ADD_ENTRY, payload: res.data });
+      changeSelectedDate(moment().toDate());
     } catch (err) {
       // console.log(err.response.data);
       dispatch({ type: ENTRY_ERROR, payload: err.response.msg });
